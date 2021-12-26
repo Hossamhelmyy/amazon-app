@@ -16,25 +16,43 @@ import {
 } from '@material-ui/core';
 import useStyles from '../../utlites/style';
 import { useDispatch, useSelector } from 'react-redux';
-
 export default function Slug() {
-	const router = useRouter();
 	const classes = useStyles();
 	const dispatch = useDispatch();
+	const router = useRouter();
 	const { slug } = router.query;
-	const { cart } = useSelector((state) => state);
-
+	const { cartItems } = useSelector((state) => state);
 	const product = data.products.find(
 		(a) => a.slug === slug,
 	);
-	console.log(product);
+
 	if (!product) {
 		return <div>Product Not Found</div>;
 	}
 	const addProductToCartt = () => {
-		dispatch(addProductToCart(product));
-		// console.log(cartItems);
-		// console.log(cartItems.length);
+		const exist = cartItems.find(
+			(item) => item.name === product.name,
+		);
+		if (
+			product.countInStock === 0 ||
+			(exist && exist.countInStock <= exist.quantity)
+		) {
+			swal({
+				text: 'this product is finished from the stock',
+				icon: 'warning',
+				buttons: 'OK',
+				dangerMode: true,
+			});
+		} else {
+			dispatch(
+				addProductToCart({
+					product: product,
+					value: false,
+				}),
+			);
+
+			router.push('/cart');
+		}
 	};
 	return (
 		<Layout

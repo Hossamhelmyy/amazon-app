@@ -44,6 +44,8 @@ const useStyles = makeStyles((theme) => ({
 	navbarButton: {
 		color: '#ffffff',
 		textTransform: 'initial',
+		cursor: 'pointer',
+		fontSize: '16px',
 	},
 	transparentBackgroud: {
 		backgroundColor: 'transparent',
@@ -114,6 +116,12 @@ const useStyles = makeStyles((theme) => ({
 		'& input': {
 			width: 250,
 		},
+	},
+	flex: {
+		display: 'flex',
+	},
+	padding: {
+		paddingLeft: '10px',
 	},
 }));
 export default useStyles;

@@ -7,6 +7,7 @@ const data = {
 			image: '/images/shirt1.jpg',
 			price: 70,
 			quantity: 1,
+			countInStock: 10,
 		},
 		{
 			name: 'Fit Shirt',
@@ -15,6 +16,7 @@ const data = {
 			image: '/images/shirt2.jpg',
 			price: 80,
 			quantity: 1,
+			countInStock: 5,
 		},
 		{
 			name: 'Slim Shirt',
@@ -23,6 +25,7 @@ const data = {
 			image: '/images/shirt3.jpg',
 			price: 90,
 			quantity: 1,
+			countInStock: 0,
 		},
 		{
 			name: 'Golf Pants',
@@ -31,6 +34,7 @@ const data = {
 			image: '/images/pants1.jpg',
 			price: 90,
 			quantity: 1,
+			countInStock: 12,
 		},
 		{
 			name: 'Fit Pants',
@@ -39,6 +43,7 @@ const data = {
 			image: '/images/pants2.jpg',
 			price: 95,
 			quantity: 1,
+			countInStock: 3,
 		},
 		{
 			name: 'Classic Pants',
@@ -55,4 +60,5 @@ const data = {
 		},
 	],
 };
+
 export default data;

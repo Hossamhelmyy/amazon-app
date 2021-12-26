@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useState } from 'react';
 import Head from 'next/head';
 import { useSelector } from 'react-redux';
 import { useDispatch } from 'react-redux';
@@ -13,20 +13,29 @@ import {
 	CssBaseline,
 	Switch,
 	FormControlLabel,
+	Badge,
+	Button,
+	Menu,
+	MenuItem,
 } from '@material-ui/core';
 import NextLink from 'next/link';
-import {
-	changeThemeToDark,
-	changeThemeToLight,
-} from '../utlites/store/actions';
 import useStyles from '../utlites/style';
-import { DarkOn, DarkOff } from '../utlites/store/store';
+import {
+	DarkOn,
+	DarkOff,
+	logout,
+} from '../utlites/store/store';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/router';
 function Layout({
 	children,
 	title = 'AMAZON',
 	description,
 }) {
-	const { darkMode } = useSelector((state) => state);
+	const { darkMode, cartItems, userInfo } = useSelector(
+		(state) => state,
+	);
+	const router = useRouter();
 
 	const dispatch = useDispatch();
 	const classes = useStyles();
@@ -55,13 +64,27 @@ function Layout({
 	});
 
 	const onModeChange = () => {
+		Cookies.set('mode', JSON.stringify(!darkMode));
 		if (darkMode) {
 			dispatch(DarkOff());
 		} else {
 			dispatch(DarkOn());
 		}
 	};
-
+	const [anchorEl, setAnchorEl] = useState(null);
+	const loginClickHandler = (e) => {
+		setAnchorEl(e.currentTarget);
+	};
+	const loginMenuCloseHandler = () => {
+		setAnchorEl(null);
+	};
+	const logoutClickHandler = () => {
+		setAnchorEl(null);
+		dispatch(logout());
+		Cookies.remove('user');
+		Cookies.remove('cartItems');
+		router.push('/');
+	};
 	return (
 		<Fragment>
 			<Head>
@@ -83,20 +106,73 @@ function Layout({
 						</NextLink>
 						<div className={classes.grow}></div>
 						<div>
-							<FormControlLabel
-								control={
-									<Switch
-										checked={darkMode}
-										onChange={onModeChange}
-									/>
-								}
-							/>
-							<NextLink href='/'>
-								<Link>Cart</Link>
+							<div
+								className='toggle-switch'
+								onClick={onModeChange}>
+								<input
+									type='checkbox'
+									className='toggle-switch-checkbox'
+									name='daily'
+									checked={darkMode ? true : false}
+								/>
+								<label className='toggle-switch-label'>
+									<span className='toggle-switch-inner' />
+									<span className='toggle-switch-switch' />
+								</label>
+							</div>
+							<NextLink href='/cart'>
+								<Link
+									style={{ marginLeft: '14px' }}
+									className={classes.navbarButton}>
+									{cartItems.length > 0 ? (
+										<Badge
+											color='secondary'
+											badgeContent={cartItems.length}>
+											Cart
+										</Badge>
+									) : (
+										'Cart'
+									)}
+								</Link>
 							</NextLink>
-							<NextLink href='/'>
-								<Link>Login</Link>
-							</NextLink>
+							{userInfo ? (
+								<>
+									<Button
+										style={{ marginLeft: '12px' }}
+										aria-controls='simple-menu'
+										aria-haspopup='true'
+										onClick={loginClickHandler}
+										className={classes.navbarButton}>
+										{userInfo}
+									</Button>
+									<Menu
+										id='simple-menu'
+										anchorEl={anchorEl}
+										keepMounted
+										open={Boolean(anchorEl)}
+										onClose={loginMenuCloseHandler}>
+										<MenuItem
+											onClick={loginMenuCloseHandler}>
+											Profile
+										</MenuItem>
+										<MenuItem
+											onClick={loginMenuCloseHandler}>
+											My account
+										</MenuItem>
+										<MenuItem onClick={logoutClickHandler}>
+											Logout
+										</MenuItem>
+									</Menu>
+								</>
+							) : (
+								<NextLink href='/login'>
+									<Link
+										style={{ marginLeft: '14px' }}
+										className={classes.navbarButton}>
+										Login
+									</Link>
+								</NextLink>
+							)}
 						</div>
 					</Toolbar>
 				</AppBar>

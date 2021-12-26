@@ -1,11 +1,18 @@
 import '../styles/globals.css';
-import { useEffect } from 'react';
+import '../styles/btn.scss';
+
+import { useEffect, useRef } from 'react';
 import { applyMiddleware } from 'redux';
 import logger from 'redux-logger';
 import { themeReducer } from '../utlites/store/store';
 import { Provider } from 'react-redux';
 import thunk from 'redux-thunk';
 import { configureStore } from '@reduxjs/toolkit';
+const store = configureStore(
+	themeReducer,
+	{},
+	applyMiddleware(thunk, logger),
+);
 function MyApp({ Component, pageProps }) {
 	useEffect(() => {
 		const jssStyles = document.querySelector(
@@ -15,16 +22,6 @@ function MyApp({ Component, pageProps }) {
 			jssStyles.parentElement.removeChild(jssStyles);
 		}
 	}, []);
-	// const loggerr = (store) => (next) => (action) => {
-	// 	console.log(action);
-	// 	next(action);
-	// };
-
-	const store = configureStore(
-		themeReducer,
-		{},
-		applyMiddleware(thunk, logger),
-	);
 
 	return (
 		<Provider store={store}>
